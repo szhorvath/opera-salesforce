@@ -1,0 +1,48 @@
+{
+    "name": "szhorvath/opera-salseforce",
+    "description": ":package_description",
+    "license": "license",
+    "authors": [
+        {
+            "name": "Sandor Horvath",
+            "email": "z.sandor.horvath@gmail.com"
+        }
+    ],
+    "homepage": "https://github.com/szhorvath/opera-salseforce",
+    "keywords": [
+        "Laravel",
+        "opera-salseforce"
+    ],
+    "require": {
+        "php": "^7.4",
+        "illuminate/support": "~6|~7",
+        "szhorvath/visual-foxpro-orm": "^0.6",
+        "rob-lester-jr04/eloquent-sales-force": "^2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0",
+        "mockery/mockery": "^1.1",
+        "orchestra/testbench": "~3|~4",
+        "sempro/phpunit-pretty-print": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Szhorvath\\OperaSalseforce\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Szhorvath\\OperaSalseforce\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Szhorvath\\OperaSalseforce\\OperaSalseforceServiceProvider"
+            ],
+            "aliases": {
+                "OperaSalseforce": "Szhorvath\\OperaSalseforce\\Facades\\OperaSalseforce"
+            }
+        }
+    }
+}

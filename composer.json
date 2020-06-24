@@ -1,5 +1,5 @@
 {
-    "name": "szhorvath/opera-salseforce",
+    "name": "szhorvath/opera-salesforce",
     "description": ":package_description",
     "license": "license",
     "authors": [
@@ -8,10 +8,10 @@
             "email": "z.sandor.horvath@gmail.com"
         }
     ],
-    "homepage": "https://github.com/szhorvath/opera-salseforce",
+    "homepage": "https://github.com/szhorvath/opera-salesforce",
     "keywords": [
         "Laravel",
-        "opera-salseforce"
+        "opera-salesforce"
     ],
     "require": {
         "php": "^7.4",
@@ -27,21 +27,21 @@
     },
     "autoload": {
         "psr-4": {
-            "Szhorvath\\OperaSalseforce\\": "src/"
+            "Szhorvath\\OperaSalesforce\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Szhorvath\\OperaSalseforce\\Tests\\": "tests"
+            "Szhorvath\\OperaSalesforce\\Tests\\": "tests"
         }
     },
     "extra": {
         "laravel": {
             "providers": [
-                "Szhorvath\\OperaSalseforce\\OperaSalseforceServiceProvider"
+                "Szhorvath\\OperaSalesforce\\OperaSalesforceServiceProvider"
             ],
             "aliases": {
-                "OperaSalseforce": "Szhorvath\\OperaSalseforce\\Facades\\OperaSalseforce"
+                "OperaSalesforce": "Szhorvath\\OperaSalesforce\\Facades\\OperaSalesforce"
             }
         }
     }

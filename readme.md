@@ -1,4 +1,4 @@
-# opera-salseforce
+# opera-salesforce
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Total Downloads][ico-downloads]][link-downloads]
@@ -12,7 +12,7 @@ This is where your description should go. Take a look at [contributing.md](contr
 Via Composer
 
 ``` bash
-$ composer require szhorvath/opera-salseforce
+$ composer require szhorvath/opera-salesforce
 ```
 
 ## Usage
@@ -44,14 +44,14 @@ If you discover any security related issues, please email author email instead o
 
 license. Please see the [license file](license.md) for more information.
 
-[ico-version]: https://img.shields.io/packagist/v/szhorvath/opera-salseforce.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/szhorvath/opera-salseforce.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/szhorvath/opera-salseforce/master.svg?style=flat-square
+[ico-version]: https://img.shields.io/packagist/v/szhorvath/opera-salesforce.svg?style=flat-square
+[ico-downloads]: https://img.shields.io/packagist/dt/szhorvath/opera-salesforce.svg?style=flat-square
+[ico-travis]: https://img.shields.io/travis/szhorvath/opera-salesforce/master.svg?style=flat-square
 [ico-styleci]: https://styleci.io/repos/12345678/shield
 
-[link-packagist]: https://packagist.org/packages/szhorvath/opera-salseforce
-[link-downloads]: https://packagist.org/packages/szhorvath/opera-salseforce
-[link-travis]: https://travis-ci.org/szhorvath/opera-salseforce
+[link-packagist]: https://packagist.org/packages/szhorvath/opera-salesforce
+[link-downloads]: https://packagist.org/packages/szhorvath/opera-salesforce
+[link-travis]: https://travis-ci.org/szhorvath/opera-salesforce
 [link-styleci]: https://styleci.io/repos/12345678
 [link-author]: https://github.com/szhorvath
 [link-contributors]: ../../contributors

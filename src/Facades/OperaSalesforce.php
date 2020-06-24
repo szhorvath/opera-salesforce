@@ -1,10 +1,10 @@
 <?php
 
-namespace Szhorvath\OperaSalseforce\Facades;
+namespace Szhorvath\OperaSalesforce\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class OperaSalseforce extends Facade
+class OperaSalesforce extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class OperaSalseforce extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'opera-salseforce';
+        return 'opera-salesforce';
     }
 }

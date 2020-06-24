@@ -1,10 +1,10 @@
 <?php
 
-namespace szhorvath\opera-salseforce;
+namespace Szhorvath\OperaSalesforce;
 
 use Illuminate\Support\ServiceProvider;
 
-class opera-salseforceServiceProvider extends ServiceProvider
+class OperaSalesforceServiceProvider extends ServiceProvider
 {
     /**
      * Perform post-registration booting of services.
@@ -31,11 +31,11 @@ class opera-salseforceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/opera-salseforce.php', 'opera-salseforce');
+        $this->mergeConfigFrom(__DIR__ . '/../config/opera-salesforce.php', 'opera-salesforce');
 
         // Register the service the package provides.
-        $this->app->singleton('opera-salseforce', function ($app) {
-            return new opera-salseforce;
+        $this->app->singleton('opera-salesforce', function ($app) {
+            return new OperaSalesforce;
         });
     }
 
@@ -46,9 +46,9 @@ class opera-salseforceServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return ['opera-salseforce'];
+        return ['opera-salesforce'];
     }
-    
+
     /**
      * Console-specific booting.
      *
@@ -58,8 +58,8 @@ class opera-salseforceServiceProvider extends ServiceProvider
     {
         // Publishing the configuration file.
         $this->publishes([
-            __DIR__.'/../config/opera-salseforce.php' => config_path('opera-salseforce.php'),
-        ], 'opera-salseforce.config');
+            __DIR__ . '/../config/opera-salesforce.php' => config_path('opera-salesforce.php'),
+        ], 'opera-salesforce.config');
 
         // Publishing the views.
         /*$this->publishes([

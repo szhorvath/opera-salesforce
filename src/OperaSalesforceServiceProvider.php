@@ -35,7 +35,11 @@ class OperaSalesforceServiceProvider extends ServiceProvider
 
         // Register the service the package provides.
         $this->app->singleton('opera-salesforce', function ($app) {
-            return new OperaSalesforce;
+
+            $defaultRegion = config('opera-salesforce.default');
+            $regions = config('opera-salesforce.regions');
+
+            return new OperaSalesforce($regions[$defaultRegion]);
         });
     }
 

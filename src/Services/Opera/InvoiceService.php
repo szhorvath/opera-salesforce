@@ -39,12 +39,12 @@ class InvoiceService
 
     public function getTax()
     {
-        return $this->invoice->st_vatval;
+        return $this->formatNumber($this->invoice->st_vatval);
     }
 
     public function getAmount()
     {
-        return $this->invoice->st_trvalue;
+        return $this->formatNumber($this->invoice->st_trvalue);
     }
 
     public function getDueDate()
@@ -55,10 +55,10 @@ class InvoiceService
     public function getBalance()
     {
         if ($this->invoice->st_fcurr) {
-            return (float) $this->invoice->st_fcbal / 100;
+            return $this->formatNumber($this->invoice->st_fcbal) / 100;
         }
 
-        return (float) $this->invoice->st_trbal;
+        return $this->formatNumber($this->invoice->st_trbal);
     }
 
     public function isPaid()

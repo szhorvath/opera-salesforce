@@ -67,7 +67,7 @@ class OrderService
 
     public function getVat()
     {
-        return $this->order->ih_vat;
+        return $this->formatNumber($this->order->ih_vat);
     }
 
     public function getCurrency()

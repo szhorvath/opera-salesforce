@@ -30,7 +30,7 @@ class OrderItem
 
     public function getInvoiceReference()
     {
-        return $this->item->it_numdelv ?: $this->item->it_numinv;
+        return $this->item->it_numinv ?: $this->item->it_numdelv;
     }
 
     public function getProductCode()

@@ -20,12 +20,12 @@ class OrderItem
 
     public function isA()
     {
-        return $this->item->it_status === 'A' && !is_null($this->item->it_stock);
+        return $this->item->it_status === 'A';
     }
 
     public function isX()
     {
-        return $this->item->it_status === 'X' && !is_null($this->item->it_stock);
+        return $this->item->it_status === 'X';
     }
 
     public function getInvoiceReference()
@@ -35,7 +35,12 @@ class OrderItem
 
     public function getProductCode()
     {
-        return $this->item->it_stock;
+        return $this->item->it_stock ?: $this->getUnregisteredProductCode();
+    }
+
+    public function getUnregisteredProductCode()
+    {
+        return 'unknown';
     }
 
     public function getQuantity()
@@ -100,14 +105,14 @@ class OrderItem
 
     public function getProductName()
     {
-        return $this->item->cn_desc;
+        return $this->item->cn_desc ?: $this->item->it_desc ?: $this->item->it_memo;
     }
 
     public function getProductDescription()
     {
-        $extra = isset($this->item->cn_exten) ? ' - ' . $this->item->cn_exten : '';
+        $extra = !empty($this->item->cn_exten) ? ' - ' . $this->item->cn_exten : '';
 
-        return $this->item->cn_desc . $extra;
+        return $this->getProductName() . $extra;
     }
 
     public function getProductFamilyName()

@@ -195,7 +195,7 @@ class OperaSalesforce
             'documentNumber' => $operaDelivery->getDocumentNumber(),
             'managingOffice' => $operaDelivery->getManagingOffice(),
             'reference'      => $operaDelivery->getInvoiceReference(),
-            'startDate'      => $operaDelivery->getDeliveryDate() ?: $operaDelivery->getInvoiceDate(),
+            'startDate'      => $operaDelivery->getInvoiceDate() ?: $operaDelivery->getDeliveryDate(),
             'invoiceDate'    => $operaDelivery->getInvoiceDate(),
             'status'         => $operaDelivery->getInvoiceDate() ? 'Invoice' : 'Delivery',
         ]);

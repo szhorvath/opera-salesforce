@@ -20,12 +20,12 @@ class OrderItem
 
     public function isA()
     {
-        return $this->item->it_status === 'A';
+        return $this->item->it_status === 'A' && $this->item->it_quan !== 0;
     }
 
     public function isX()
     {
-        return $this->item->it_status === 'X';
+        return $this->item->it_status === 'X' && $this->item->it_quan !== 0;
     }
 
     public function getInvoiceReference()

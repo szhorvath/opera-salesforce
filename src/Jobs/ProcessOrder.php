@@ -66,7 +66,11 @@ class ProcessOrder implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        Log::alert($exception->getMessage(), ['docNumber' => $this->activity->opera_key_field_value]);
-        throw new Exception($this->activity->opera_key_field_value . ' - ' . $exception->getMessage());
+        Log::alert($exception->getMessage(), [
+            'docNumber' => $this->activity->opera_key_field_value,
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+        ]);
+        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

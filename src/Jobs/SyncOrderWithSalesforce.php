@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use App\Models\Opera\OperaActivity;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -54,6 +55,11 @@ class SyncOrderWithSalesforce implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        throw new Exception($this->docNumber . ' - ' . $exception->getMessage());
+        Log::alert($exception->getMessage(), [
+            'docNumber' => $this->activity->opera_key_field_value,
+            'file' => $exception->getFile(),
+            'line' => $exception->getLine(),
+        ]);
+        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

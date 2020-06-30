@@ -6,6 +6,7 @@ use Exception;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use App\Models\Opera\OperaActivity;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -60,11 +61,12 @@ class ProcessOrder implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  Exception   $exception
      * @return void
      */
     public function failed(Exception $exception)
     {
+        Log::alert($exception->getMessage(), ['docNumber' => $this->activity->opera_key_field_value]);
         throw new Exception($this->activity->opera_key_field_value . ' - ' . $exception->getMessage());
     }
 }

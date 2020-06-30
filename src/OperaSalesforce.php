@@ -119,7 +119,9 @@ class OperaSalesforce
             'currency' => $this->operaOrderService->getCurrency(),
             'startDate' => $this->operaOrderService->getStartDate(),
             'deliveryDate' => $this->operaOrderService->getDeliveryDate(),
+            'deliveryNumber' => $this->operaOrderService->getDeliveryNumber(),
             'invoiceDate' => $this->operaOrderService->getInvoiceDate(),
+            'invoiceNumber' => $this->operaOrderService->getInvoiceNumber(),
             'dueDate' => $this->operaOrderService->getDueDate(),
             'vat' => $this->operaOrderService->getVat(),
             'managingOffice' => $this->operaOrderService->getManagingOffice(),
@@ -129,6 +131,7 @@ class OperaSalesforce
             'shippingCity' => $this->operaOrderService->getShippingCity(),
             'shippingState' => $this->operaOrderService->getShippingState(),
             'shippingPostalCode' => $this->operaOrderService->getShippingPostalCode(),
+            'statusCode' => $this->operaOrderService->getStatusCode(),
             'type' => 'Order',
         ]);
 
@@ -139,12 +142,14 @@ class OperaSalesforce
         //Update order status
         $this->salesforceOrderService->updateStatus($this->operaOrderService->getStatus());
 
-        //Delete Invoices
+        //Delete Invoices and Forecasts
+        $this->salesforceOrderService->deleteForecastInvoices();
         $this->salesforceOrderService->deleteInvoices();
 
         //Create invoices
         $this->operaOrderItemService->getDeliveries()
-            ->each(fn ($operaItems) => $this->createInvoice($operaItems, $salesforceOrder));
+            ->map(fn ($operaItems) => $this->createInvoice($operaItems, $salesforceOrder))
+            ->each(fn ($invoice) => $this->createForecast($invoice));
 
         return $this;
     }
@@ -213,6 +218,8 @@ class OperaSalesforce
         $salesforceInvoice = $this->salesforceOrderService->insertInvoice((object) $data->toArray());
 
         $operaItems->each(fn ($item) => $this->createInvoiceItem($item, $salesforceInvoice));
+
+        return $salesforceInvoice;
     }
 
     public function createInvoiceItem(OrderItem $operaItem, Invoice $salesforceInvoice)
@@ -261,6 +268,7 @@ class OperaSalesforce
             'deliveryDate' => $this->operaOrderService->getDeliveryDate(),
             'invoiceDate' => $this->operaOrderService->getInvoiceDate(),
             'creditNumber' => $this->operaOrderService->getCreditNumber(),
+            'creditDate' => $this->operaOrderService->getCreditDate(),
             'dueDate' => $this->operaOrderService->getDueDate(),
             'vat' => $this->operaOrderService->getVat(),
             'managingOffice' => $this->operaOrderService->getManagingOffice(),
@@ -270,10 +278,12 @@ class OperaSalesforce
             'shippingCity' => $this->operaOrderService->getShippingCity(),
             'shippingState' => $this->operaOrderService->getShippingState(),
             'shippingPostalCode' => $this->operaOrderService->getShippingPostalCode(),
+            'statusCode' => $this->operaOrderService->getStatusCode(),
             'type' => 'Order',
         ]);
 
-        //Delete Credit Note Invoices
+        //Delete Credit Note Invoices and Forecasts
+        $this->salesforceOrderService->deleteForecastInvoices();
         $this->salesforceOrderService->deleteInvoices();
 
         $orderItems = $this->operaOrderItemService->getAItems();
@@ -282,6 +292,9 @@ class OperaSalesforce
 
         //Create Credit Note Order Items
         $orderItems->each(fn ($item) => $this->createCreditNoteOrderAndInvoiceItem($item, $salesforceOrder, $salesforceCreditNoteInvoice));
+
+        //Create Forecast
+        $this->createForecast($salesforceCreditNoteInvoice);
 
         //Update Credit Note Order Status
         $this->salesforceOrderService->updateStatus($this->operaOrderService->getStatus());
@@ -297,6 +310,8 @@ class OperaSalesforce
             'documentNumber' => $operaItem->getDocumentNumber(),
             'managingOffice' => $operaItem->getManagingOffice(),
             'reference'      => $this->operaOrderService->getCreditNumber(),
+            'creditNumber'   => $this->operaOrderService->getCreditNumber(),
+            'creditDate'     => $this->operaOrderService->getCreditDate(),
             'startDate'      => $operaItem->getStartDate(),
             'invoiceDate'    => $operaItem->getInvoiceDate(),
             'status'         => 'Credit Note',
@@ -339,5 +354,10 @@ class OperaSalesforce
             'unitAmount'     => $unitPrice,
             'productName'    => $operaItem->getProductName(),
         ]);
+    }
+
+    public function createForecast(Invoice $salesforceInvoice)
+    {
+        return $this->salesforceOrderService->InsertForecast($salesforceInvoice, $this->salesforceAccountService->getAccountId());
     }
 }

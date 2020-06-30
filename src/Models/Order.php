@@ -26,8 +26,11 @@ class Order extends Model
         'CurrencyIsoCode',
         'PoNumber',
         'Delivery_Date__c',
+        'Delivery_Number__c',
+        'Invoice_Number__c',
         'Invoice_Date__c',
         'Credit_Number__c',
+        'Credit_Date__c',
         'Due_Date__c',
         'Raised_By__c',
         'Vat__c',
@@ -42,6 +45,7 @@ class Order extends Model
         'ShippingState',
         'ShippingPostalCode',
         'Status',
+        'Status_Code__c',
     ];
 
     public function account()

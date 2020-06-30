@@ -3,6 +3,7 @@
 namespace Szhorvath\OperaSalesforce\Services\Salesforce;
 
 use Illuminate\Support\Str;
+use Szhorvath\OperaSalesforce\Models\Invoice;
 use Szhorvath\OperaSalesforce\Repositories\Salesforce\OrderRepository;
 
 
@@ -39,6 +40,15 @@ class OrderService
         return $this->isEmpty() ? collect() : $this->order->invoices;
     }
 
+    public function deleteForecastInvoices()
+    {
+        return $this->getInvoices()->each(function ($invoice) {
+            if ($invoice->forecast) {
+                $invoice->forecast->delete();
+            }
+        });
+    }
+
     public function deleteInvoices()
     {
         return $this->getInvoices()->each(fn ($invoice) => $invoice->delete());
@@ -57,9 +67,12 @@ class OrderService
         $this->order->PoNumber             = $data->customerReference;
         $this->order->CurrencyIsoCode      = $data->currency;
         $this->order->EffectiveDate        = $data->startDate;
-        $this->order->Delivery_Date__c     = $data->deliveryDate;
+        $this->order->Delivery_Date__c     = $data->deliveryDate ?? null;
+        $this->order->Delivery_Number__c   = $data->deliveryNumber ?? null;
         $this->order->Credit_Number__c     = $data->creditNumber ?? null;
-        $this->order->Invoice_Date__c      = $data->invoiceDate;
+        $this->order->Credit_Date__c       = $data->creditDate ?? null;
+        $this->order->Invoice_Number__c    = $data->invoiceNumber ?? null;
+        $this->order->Invoice_Date__c      = $data->invoiceDate ?? null;
         $this->order->Due_Date__c          = $data->dueDate;
         $this->order->Vat__c               = $data->vat;
         $this->order->Managing_Office__c   = $data->managingOffice;
@@ -70,6 +83,7 @@ class OrderService
         $this->order->ShippingState        = $data->shippingState;
         $this->order->ShippingPostalCode   = $data->shippingPostalCode;
         $this->order->Pricebook2Id         = $this->officePricebookId;
+        $this->order->Status_Code__c       = $data->statusCode;
         $this->order->Status               = 'Quote';
 
         $this->order = $this->order->save();
@@ -113,9 +127,10 @@ class OrderService
 
         $invoice->Order__c            = $data->orderId;
         $invoice->Credit_Number__c    = $data->creditNumber ?? null;
+        $invoice->Credit_Date__c      = $data->creditDate ?? null;
         $invoice->CurrencyIsoCode     = $data->currency;
-        $invoice->Delivery_Date__c    = $data->deliveryDate;
-        $invoice->Delivery_Number__c  = $data->deliveryNumber;
+        $invoice->Delivery_Date__c    = $data->deliveryDate ?? null;
+        $invoice->Delivery_Number__c  = $data->deliveryNumber ?? null;
         $invoice->Document_Number__c  = $data->documentNumber;
         $invoice->Managing_Office__c  = $data->managingOffice;
         $invoice->Invoice_Amount__c   = $data->invoiceAmount ?? null;
@@ -146,6 +161,23 @@ class OrderService
         $invoiceItem->Name               = $data->productName;
 
         return $invoiceItem->save();
+    }
+
+    public function insertForecast(Invoice $invoice, $accountId)
+    {
+        $invoice = Invoice::find($invoice->Id);
+
+        $forecast = $this->orderRepository->newForecast();
+        $forecast->Account__c         = $accountId;
+        $forecast->Invoice__c         = $invoice->Id;
+        $forecast->Name               = $invoice->Name;
+        $forecast->Amount__c          = $invoice->Total_Amount__c;
+        $forecast->Managing_Office__c = $invoice->Managing_Office__c;
+        $forecast->Date__c            = $invoice->Start_Date__c;
+        $forecast->CurrencyIsoCode    = $invoice->CurrencyIsoCode;
+        $forecast->Type__c            = 'Actual';
+
+        return $forecast->save();
     }
 
     public function describe()

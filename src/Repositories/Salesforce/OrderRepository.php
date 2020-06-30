@@ -2,6 +2,7 @@
 
 namespace Szhorvath\OperaSalesforce\Repositories\Salesforce;
 
+use Szhorvath\OperaSalesforce\Models\Forecast;
 use Szhorvath\OperaSalesforce\Models\Order;
 use Szhorvath\OperaSalesforce\Models\Invoice;
 use Szhorvath\OperaSalesforce\Models\InvoiceItem;
@@ -40,5 +41,10 @@ class OrderRepository
     public function newInvoiceItem()
     {
         return new InvoiceItem();
+    }
+
+    public function newForecast()
+    {
+        return new Forecast();
     }
 }

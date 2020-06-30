@@ -128,6 +128,11 @@ class OrderService
         return $this->getOrderStatus($this->order->ih_docstat);
     }
 
+    public function getStatusCode()
+    {
+        return $this->order->ih_docstat;
+    }
+
     public function isCreditNote()
     {
         return $this->order->ih_docstat === 'C';
@@ -141,5 +146,15 @@ class OrderService
     public function getCreditNumber()
     {
         return $this->order->ih_credit;
+    }
+
+    public function getDeliveryNumber()
+    {
+        return $this->order->ih_deliv;
+    }
+
+    public function getInvoiceNumber()
+    {
+        return $this->order->ih_invoice;
     }
 }

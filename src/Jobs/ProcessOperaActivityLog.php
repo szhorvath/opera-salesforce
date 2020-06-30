@@ -61,7 +61,7 @@ class ProcessOperaActivityLog implements ShouldQueue
             if ($processing->isEmpty()) {
                 $activity = $activities->sortByDesc('opera_created_at')->shift();
                 ProcessOrder::dispatch($activity)->delay($date);
-                $date->addSeconds(2);
+                $date->addSeconds(5);
             }
 
             //Delete rest of the log items;

@@ -37,11 +37,11 @@ class SyncOrderWithSalesforce implements ShouldQueue
     {
         $operaSalesforce = OperaSalesforce::init($this->docNumber);
 
-        if ($operaSalesforce->isOperaOrderExists()) {
+        if ($operaSalesforce->operaOrderExists()) {
             $operaSalesforce->syncSalesforceWithOpera();
         }
 
-        if (!$operaSalesforce->isOperaOrderExists() && $operaSalesforce->isSalesforceOrderExists()) {
+        if (!$operaSalesforce->operaOrderExists() && $operaSalesforce->salesforceOrderExists()) {
             $operaSalesforce->deleteSalesforceOrder();
         }
     }

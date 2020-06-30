@@ -89,12 +89,12 @@ class OperaSalesforce
         return $this->salesforceOrderService->getOrder();
     }
 
-    public function isOperaOrderExists()
+    public function operaOrderExists()
     {
         return !$this->operaOrderService->isEmpty();
     }
 
-    public function isSalesforceOrderExists()
+    public function salesforceOrderExists()
     {
         return !$this->salesforceOrderService->isEmpty();
     }

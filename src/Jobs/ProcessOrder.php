@@ -44,12 +44,12 @@ class ProcessOrder implements ShouldQueue
         // $operaSalesforce = OperaSalesforce::init('DOC118522'); //multi invoice
         // $operaSalesforce = OperaSalesforce::init('DOC125208'); //not exist
 
-        if ($operaSalesforce->isOperaOrderExists()) {
+        if ($operaSalesforce->operaOrderExists()) {
             $operaSalesforce->syncSalesforceWithOpera();
             $this->activity->cache = json_encode($operaSalesforce->getOperaOrder());
         }
 
-        if (!$operaSalesforce->isOperaOrderExists() && $operaSalesforce->isSalesforceOrderExists()) {
+        if (!$operaSalesforce->operaOrderExists() && $operaSalesforce->salesforceOrderExists()) {
             $operaSalesforce->deleteSalesforceOrder();
         }
 

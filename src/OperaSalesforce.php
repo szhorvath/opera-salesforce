@@ -189,6 +189,7 @@ class OperaSalesforce
 
         $data = collect([
             'orderId'        => $salesforceOrder->Id,
+            'accountId'      => $this->salesforceAccountService->getAccountId(),
             'currency'       => $operaDelivery->getCurrency(),
             'deliveryNumber' => $operaDelivery->getDeliveryNumber(),
             'deliveryDate'   => $operaDelivery->getDeliveryDate(),
@@ -304,6 +305,7 @@ class OperaSalesforce
     {
         return $this->salesforceOrderService->insertInvoice((object) [
             'orderId'        => $salesforceOrder->Id,
+            'accountId'      => $this->salesforceAccountService->getAccountId(),
             'currency'       => $operaItem->getCurrency(),
             'deliveryNumber' => $operaItem->getDeliveryNumber(),
             'deliveryDate'   => $operaItem->getDeliveryDate(),

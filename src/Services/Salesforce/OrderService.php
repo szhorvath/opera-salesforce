@@ -126,6 +126,7 @@ class OrderService
         $invoice = $this->orderRepository->newInvoice();
 
         $invoice->Order__c            = $data->orderId;
+        $invoice->Account__c          = $data->accountId;
         $invoice->Credit_Number__c    = $data->creditNumber ?? null;
         $invoice->Credit_Date__c      = $data->creditDate ?? null;
         $invoice->CurrencyIsoCode     = $data->currency;

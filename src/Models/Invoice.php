@@ -17,6 +17,7 @@ class Invoice extends Model
 
     public $columns = [
         'Id',
+        'Account__c',
         'Credit_Number__c',
         'Credit_Date__c',
         'CurrencyIsoCode', //Picklist

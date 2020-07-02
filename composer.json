@@ -1,48 +1,48 @@
 {
-    "name": "szhorvath/opera-salesforce",
-    "description": ":package_description",
-    "license": "license",
-    "authors": [
-        {
-            "name": "Sandor Horvath",
-            "email": "z.sandor.horvath@gmail.com"
-        }
-    ],
-    "homepage": "https://github.com/szhorvath/opera-salesforce",
-    "keywords": [
-        "Laravel",
-        "opera-salesforce"
-    ],
-    "require": {
-        "php": "^7.4",
-        "illuminate/support": "~6|~7",
-        "szhorvath/visual-foxpro-orm": "^0.6",
-        "rob-lester-jr04/eloquent-sales-force": "^2.6"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^8.0",
-        "mockery/mockery": "^1.1",
-        "orchestra/testbench": "~3|~4",
-        "sempro/phpunit-pretty-print": "^1.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "Szhorvath\\OperaSalesforce\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Szhorvath\\OperaSalesforce\\Tests\\": "tests"
-        }
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Szhorvath\\OperaSalesforce\\OperaSalesforceServiceProvider"
-            ],
-            "aliases": {
-                "OperaSalesforce": "Szhorvath\\OperaSalesforce\\Facades\\OperaSalesforce"
-            }
-        }
+  "name": "szhorvath/opera-salesforce",
+  "description": ":package_description",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Sandor Horvath",
+      "email": "z.sandor.horvath@gmail.com"
     }
+  ],
+  "homepage": "https://github.com/szhorvath/opera-salesforce",
+  "keywords": [
+    "Laravel",
+    "opera-salesforce"
+  ],
+  "require": {
+    "php": "^7.4",
+    "illuminate/support": "~6|~7",
+    "szhorvath/visual-foxpro-orm": "^0.6",
+    "rob-lester-jr04/eloquent-sales-force": "^2.6"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0",
+    "mockery/mockery": "^1.1",
+    "orchestra/testbench": "~3|~4",
+    "sempro/phpunit-pretty-print": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Szhorvath\\OperaSalesforce\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Szhorvath\\OperaSalesforce\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Szhorvath\\OperaSalesforce\\OperaSalesforceServiceProvider"
+      ],
+      "aliases": {
+        "OperaSalesforce": "Szhorvath\\OperaSalesforce\\Facades\\OperaSalesforce"
+      }
+    }
+  }
 }

@@ -61,6 +61,11 @@ class InvoiceService
         return $this->formatNumber($this->invoice->st_trbal);
     }
 
+    public function getHomeBalance()
+    {
+        return $this->formatNumber($this->invoice->st_trbal);
+    }
+
     public function isPaid()
     {
         return $this->getBalance() == 0 ? true : false;

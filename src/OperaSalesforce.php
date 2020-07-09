@@ -208,7 +208,7 @@ class OperaSalesforce
 
             $data = $data->merge([
                 'invoiceAmount'  => $operaInvoiceService->getAmount(),
-                'invoiceBalance' => $operaInvoiceService->getBalance(),
+                'invoiceBalance' => $operaInvoiceService->getHomeBalance(),
                 'invoiceDueDate' => $operaInvoiceService->getDueDate(),
                 'invoiceNumber'  => $operaInvoiceService->getInvoiceNumber(),
                 'invoiceTax'     => $operaInvoiceService->getTax(),

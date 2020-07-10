@@ -17,4 +17,13 @@ class InvoiceRepository
 
         return $this->foxproDB->query($sql)->first();
     }
+
+    public function findById(int $id)
+    {
+        $sql = "SELECT * FROM stran
+                WHERE st_trtype='I'
+                AND id = $id";
+
+        return $this->foxproDB->query($sql)->first();
+    }
 }

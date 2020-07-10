@@ -11,20 +11,20 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Szhorvath\OperaSalesforce\Facades\OperaSalesforce;
 
-class SyncOrderWithSalesforce implements ShouldQueue
+class SyncInvoiceWithSalesforce implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $docNumber;
+    protected $invoiceId;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($docNumber)
+    public function __construct($invoiceId)
     {
-        $this->docNumber = $docNumber;
+        $this->invoiceId = $invoiceId;
     }
 
     /**
@@ -34,15 +34,7 @@ class SyncOrderWithSalesforce implements ShouldQueue
      */
     public function handle()
     {
-        $operaSalesforce = OperaSalesforce::init($this->docNumber);
-
-        if ($operaSalesforce->operaOrderExists()) {
-            $operaSalesforce->syncSalesforceWithOpera();
-        }
-
-        if (!$operaSalesforce->operaOrderExists() && $operaSalesforce->salesforceOrderExists()) {
-            $operaSalesforce->deleteSalesforceOrder();
-        }
+        OperaSalesforce::setOperaInvoiceService(null, null, $this->invoiceId)->updateInvoice();
     }
 
     /**
@@ -54,10 +46,10 @@ class SyncOrderWithSalesforce implements ShouldQueue
     public function failed(Exception $exception)
     {
         Log::alert($exception->getMessage(), [
-            'docNumber' => $this->activity->opera_key_field_value,
+            'invoiceId' => $this->invoiceId,
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
         ]);
-        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
+        throw new Exception($this->invoiceId . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

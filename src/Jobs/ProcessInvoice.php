@@ -3,7 +3,9 @@
 namespace Szhorvath\OperaSalesforce\Jobs;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
+use App\Models\Opera\OperaActivity;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -11,20 +13,22 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Szhorvath\OperaSalesforce\Facades\OperaSalesforce;
 
-class SyncOrderWithSalesforce implements ShouldQueue
+class ProcessInvoice implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $docNumber;
+    protected $activity;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($docNumber)
+    public function __construct(OperaActivity $activity)
     {
-        $this->docNumber = $docNumber;
+        $this->activity = $activity;
+        $this->activity->processing = true;
+        $this->activity->save();
     }
 
     /**
@@ -34,30 +38,30 @@ class SyncOrderWithSalesforce implements ShouldQueue
      */
     public function handle()
     {
-        $operaSalesforce = OperaSalesforce::init($this->docNumber);
+        $invoice = OperaSalesforce::setOperaInvoiceService(null, null, $this->activity->opera_id_field)->updateInvoice();
 
-        if ($operaSalesforce->operaOrderExists()) {
-            $operaSalesforce->syncSalesforceWithOpera();
+        if ($invoice) {
+            $this->activity->cache = json_encode($invoice->toArray());
         }
 
-        if (!$operaSalesforce->operaOrderExists() && $operaSalesforce->salesforceOrderExists()) {
-            $operaSalesforce->deleteSalesforceOrder();
-        }
+        $this->activity->processing = false;
+        $this->activity->processed_at = Carbon::now();
+        $this->activity->save();
     }
 
     /**
      * The job failed to process.
      *
-     * @param  Exception  $exception
+     * @param  Exception   $exception
      * @return void
      */
     public function failed(Exception $exception)
     {
         Log::alert($exception->getMessage(), [
-            'docNumber' => $this->activity->opera_key_field_value,
+            'invoiceId' => $this->activity->opera_id_field,
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
         ]);
-        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
+        throw new Exception($this->activity->opera_id_field . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

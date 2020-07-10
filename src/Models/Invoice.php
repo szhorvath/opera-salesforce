@@ -53,4 +53,9 @@ class Invoice extends Model
     {
         return $this->hasOne(Forecast::class, 'Invoice__c');
     }
+
+    public function scopeByNumber($query, $number)
+    {
+        return $query->where('Invoice_Number__c', $number);
+    }
 }

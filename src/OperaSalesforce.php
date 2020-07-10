@@ -10,6 +10,7 @@ use Szhorvath\OperaSalesforce\Services\Opera\OrderItemService as OperaOrderItemS
 use Szhorvath\OperaSalesforce\Services\Opera\InvoiceService as OperaInvoiceService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\OrderService as SalesforceOrderService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\AccountService as SalesforceAccountService;
+use Szhorvath\OperaSalesforce\Services\Salesforce\InvoiceService as SalesforceInvoiceService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\ProductService as SalesforceProductService;
 
 class OperaSalesforce
@@ -21,6 +22,8 @@ class OperaSalesforce
     protected $operaOrderService;
 
     protected $operaOrderItemService;
+
+    protected $operaInvoiceService;
 
     protected $salesforceOrderService;
 
@@ -76,6 +79,12 @@ class OperaSalesforce
     public function setSalesforceAccountService()
     {
         $this->salesforceAccountService = new SalesforceAccountService($this->config, $this->operaOrderService->getAccountCode());
+        return $this;
+    }
+
+    public function setOperaInvoiceService(?string $invoiceNumber, ?string $accountCode, ?int $invoiceId = null)
+    {
+        $this->operaInvoiceService = new OperaInvoiceService($this->config, $invoiceNumber, $accountCode, $invoiceId);
         return $this;
     }
 
@@ -221,6 +230,23 @@ class OperaSalesforce
         $operaItems->each(fn ($item) => $this->createInvoiceItem($item, $salesforceInvoice));
 
         return $salesforceInvoice;
+    }
+
+    public function updateInvoice()
+    {
+        if ($this->operaInvoiceService->isEmpty()) {
+            return;
+        }
+
+        $salesforceInvoiceService = new SalesforceInvoiceService($this->config, $this->operaInvoiceService->getInvoiceNumber());
+        return $salesforceInvoiceService->updateInvoice((object) [
+            'invoiceNumber'  => $this->operaInvoiceService->getInvoiceNumber(),
+            'invoiceAmount'  => $this->operaInvoiceService->getAmount(),
+            'invoiceBalance' => $this->operaInvoiceService->getHomeBalance(),
+            'invoiceDueDate' => $this->operaInvoiceService->getDueDate(),
+            'invoiceTax'     => $this->operaInvoiceService->getTax(),
+            'paid'           => $this->operaInvoiceService->isPaid(),
+        ]);
     }
 
     public function createInvoiceItem(OrderItem $operaItem, Invoice $salesforceInvoice)

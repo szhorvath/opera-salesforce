@@ -2,29 +2,25 @@
 
 namespace Szhorvath\OperaSalesforce\Repositories\Salesforce;
 
+use Szhorvath\OperaSalesforce\Models\Invoice;
 use Szhorvath\OperaSalesforce\Traits\SalesforceRepositoryTrait;
 
 class InvoiceRepository
 {
     use SalesforceRepositoryTrait;
 
-    public function find($code)
+    public function find($number)
     {
-        return Invoice::office($this->config['office'])->byCode($code)->first();
+        return Invoice::office($this->config['office'])->byNumber($number)->first();
     }
 
-    public function getHolding()
+    public function newInvoice()
     {
-        return Account::office($this->config['office'])->byCode('holding')->first();
-    }
-
-    public function newAccount()
-    {
-        return new Account;
+        return new Invoice;
     }
 
     public function describe()
     {
-        return Account::describe();
+        return Invoice::describe();
     }
 }

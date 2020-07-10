@@ -13,7 +13,7 @@ class InvoiceService
 
     protected $invoice;
 
-    public function __construct(array $config, string $invoiceNumber = null, string $accountCode = null)
+    public function __construct(array $config, ?string $invoiceNumber = null, ?string $accountCode = null, ?int $invoiceId = null)
     {
         $this->invoiceRepository = new InvoiceRepository($config['source']);
         $this->locale = $config['locale'];
@@ -22,7 +22,16 @@ class InvoiceService
 
         if ($invoiceNumber && $accountCode) {
             $this->setInvoice($invoiceNumber, $accountCode);
+        } elseif ($invoiceId) {
+            $this->setInvoiceById($invoiceId);
         }
+    }
+
+    public function setInvoiceById($invoiceId)
+    {
+        $this->invoice = $this->invoiceRepository->findById($invoiceId);
+
+        return $this;
     }
 
     public function setInvoice($invoiceNumber, $accountCode)
@@ -30,6 +39,11 @@ class InvoiceService
         $this->invoice = $this->invoiceRepository->find($invoiceNumber, $accountCode);
 
         return $this;
+    }
+
+    public function isEmpty()
+    {
+        return empty($this->invoice);
     }
 
     public function getInvoiceNumber()

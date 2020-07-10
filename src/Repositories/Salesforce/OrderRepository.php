@@ -38,6 +38,11 @@ class OrderRepository
         return new Invoice;
     }
 
+    public function findInvoiceByNumber($number)
+    {
+        return Invoice::byNumber($number)->first();
+    }
+
     public function newInvoiceItem()
     {
         return new InvoiceItem();

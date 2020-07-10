@@ -56,6 +56,6 @@ class Invoice extends Model
 
     public function scopeByNumber($query, $number)
     {
-        return $query->where('Invoice_Number__c', $number);
+        return $query->whereRaw("Invoice_Number__c = '$number'");
     }
 }

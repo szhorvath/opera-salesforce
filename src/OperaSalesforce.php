@@ -329,7 +329,7 @@ class OperaSalesforce
 
     public function createCreditNoteInvoice(OrderItem $operaItem, Order $salesforceOrder)
     {
-        return $this->salesforceOrderService->insertInvoice((object) [
+        $data = collect([
             'orderId'        => $salesforceOrder->Id,
             'accountId'      => $this->salesforceAccountService->getAccountId(),
             'currency'       => $operaItem->getCurrency(),
@@ -344,6 +344,21 @@ class OperaSalesforce
             'invoiceDate'    => $operaItem->getInvoiceDate(),
             'status'         => 'Credit Note',
         ]);
+
+        if ($operaItem->getInvoiceNumber()) {
+            $operaInvoiceService = $this->getOperaInvoiceService($operaItem->getInvoiceNumber(), $this->operaOrderService->getAccountCode());
+
+            $data = $data->merge([
+                'invoiceAmount'  => $operaInvoiceService->getAmount(),
+                'invoiceBalance' => $operaInvoiceService->getHomeBalance(),
+                'invoiceDueDate' => $operaInvoiceService->getDueDate(),
+                'invoiceNumber'  => $operaInvoiceService->getInvoiceNumber(),
+                'invoiceTax'     => $operaInvoiceService->getTax(),
+                'paid'           => $operaInvoiceService->isPaid(),
+            ]);
+        }
+
+        return $this->salesforceOrderService->insertInvoice((object)$data->toArray());
     }
 
     public function createCreditNoteOrderAndInvoiceItem(OrderItem $operaItem, Order $salesforceOrder, Invoice $salesforceInvoice)

@@ -79,6 +79,7 @@ class ProcessOperaActivityLog implements ShouldQueue
     protected function handleInvoices()
     {
         $unprocessedInvoices = OperaActivity::where('opera_table_name', 'STRAN')
+            ->where('opera_activity', '!=', 'End of Period')
             ->where('processed_at', null)
             ->orderBy('processing')
             ->get()->groupBy('opera_id_field');

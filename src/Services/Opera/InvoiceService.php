@@ -11,32 +11,49 @@ class InvoiceService
 
     protected $invoiceRepository;
 
-    protected $invoice;
+    protected $invoice = null;
 
-    public function __construct(array $config, ?string $invoiceNumber = null, ?string $accountCode = null, ?int $invoiceId = null)
+    protected $invoiceNumber;
+
+    protected $accountCode;
+
+    protected $invoiceId;
+
+    public function __construct(array $config = [], ?string $invoiceNumber = null, ?string $accountCode = null, ?int $invoiceId = null)
     {
-        $this->invoiceRepository = new InvoiceRepository($config['source']);
-        $this->locale = $config['locale'];
-        $this->currency = $config['currency'];
-        $this->office = $config['office'];
-
-        if ($invoiceNumber && $accountCode) {
-            $this->setInvoice($invoiceNumber, $accountCode);
-        } elseif ($invoiceId) {
-            $this->setInvoiceById($invoiceId);
+        if (!empty($config)) {
+            $this->setInvoiceRepository($config['source']);
+            $this->locale = $config['locale'];
+            $this->currency = $config['currency'];
+            $this->office = $config['office'];
+            $this->invoiceNumber = $invoiceNumber;
+            $this->accountCode = $accountCode;
+            $this->invoiceId = $invoiceId;
+            $this->invoice = $this->getInvoice();
         }
     }
 
-    public function setInvoiceById($invoiceId)
+    public function setInvoiceRepository($source)
     {
-        $this->invoice = $this->invoiceRepository->findById($invoiceId);
+        $this->invoiceRepository = new InvoiceRepository($source);
 
         return $this;
     }
 
-    public function setInvoice($invoiceNumber, $accountCode)
+    public function getInvoice()
     {
-        $this->invoice = $this->invoiceRepository->find($invoiceNumber, $accountCode);
+        if ($this->invoiceNumber && $this->accountCode) {
+            return $this->invoiceRepository->find($this->invoiceNumber, $this->accountCode);
+        } elseif ($this->invoiceId) {
+            return $this->invoiceRepository->findById($this->invoiceId);
+        }
+
+        return null;
+    }
+
+    public function setInvoice($invoice)
+    {
+        $this->invoice = $invoice;
 
         return $this;
     }

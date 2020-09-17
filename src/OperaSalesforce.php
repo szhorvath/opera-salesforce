@@ -19,6 +19,8 @@ class OperaSalesforce
 
     protected $docNumber = null;
 
+    protected $operaInvoice = null;
+
     protected $operaOrderService;
 
     protected $operaOrderItemService;
@@ -29,7 +31,7 @@ class OperaSalesforce
 
     protected $salesforceAccountService;
 
-    public function __construct(array $config)
+    public function __construct(array $config = [])
     {
         $this->config = $config;
     }
@@ -82,9 +84,15 @@ class OperaSalesforce
         return $this;
     }
 
-    public function setOperaInvoiceService(?string $invoiceNumber, ?string $accountCode, ?int $invoiceId = null)
+    public function initOperaInvoiceService(?string $invoiceNumber, ?string $accountCode, ?int $invoiceId = null)
     {
         $this->operaInvoiceService = new OperaInvoiceService($this->config, $invoiceNumber, $accountCode, $invoiceId);
+        return $this;
+    }
+
+    public function setOperaInvoiceService(OperaInvoiceService $operaInvoiceInstance)
+    {
+        $this->operaInvoiceService = $operaInvoiceInstance;
         return $this;
     }
 

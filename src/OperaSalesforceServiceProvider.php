@@ -31,13 +31,13 @@ class OperaSalesforceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/opera-salesforce.php', 'opera-salesforce');
+        $this->mergeConfigFrom(__DIR__ . '/../config/opera-salesforce.php', 'opera_salesforce');
 
         // Register the service the package provides.
         $this->app->singleton('opera-salesforce', function ($app) {
 
-            $defaultRegion = config('opera-salesforce.default');
-            $regions = config('opera-salesforce.regions');
+            $defaultRegion = config('opera_salesforce.default');
+            $regions = config('opera_salesforce.regions');
 
             return new OperaSalesforce($regions[$defaultRegion]);
         });

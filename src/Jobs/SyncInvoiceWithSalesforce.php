@@ -34,7 +34,7 @@ class SyncInvoiceWithSalesforce implements ShouldQueue
      */
     public function handle()
     {
-        OperaSalesforce::setOperaInvoiceService(null, null, $this->invoiceId)->updateInvoice();
+        OperaSalesforce::initOperaInvoiceService(null, null, $this->invoiceId)->updateInvoice();
     }
 
     /**

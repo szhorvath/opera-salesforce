@@ -23,6 +23,23 @@ trait OperaServiceTrait
         5 => 10000
     ];
 
+    public function setLocale($locale)
+    {
+        $this->locale = $locale;
+        return $this;
+    }
+
+    public function setCurrency($currency)
+    {
+        $this->currency = $currency;
+        return $this;
+    }
+
+    public function setOffice($office)
+    {
+        $this->office = $office;
+        return $this;
+    }
 
     protected function getDecimalPlace($dps)
     {
@@ -48,7 +65,6 @@ trait OperaServiceTrait
             '0005' => 'Miscellaneous',
             '0006' => 'Temporary Fencing',
             '0007' => 'Temporary Fencing',
-
             '0008' => 'Temporary Fencing',
             '0010' => 'Pedestrian Barriers',
             '0015' => 'Accessories',

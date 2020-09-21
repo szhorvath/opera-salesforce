@@ -31,7 +31,7 @@ class OperaSalesforceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/opera-salesforce.php', 'opera_salesforce');
+        $this->mergeConfigFrom(__DIR__ . '/../config/opera_salesforce.php', 'opera_salesforce');
 
         // Register the service the package provides.
         $this->app->singleton('opera-salesforce', function ($app) {

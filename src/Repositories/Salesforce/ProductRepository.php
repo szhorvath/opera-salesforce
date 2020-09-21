@@ -39,7 +39,7 @@ class ProductRepository
     public function officePricebook()
     {
         if (!$pricebook = Pricebook::find($this->config['pricebook'])) {
-            throw new \Throwable("Pricebook is missing in Salesforce: ZND UK");
+            throw new \Exception("Pricebook is missing in Salesforce: ZND UK");
         }
 
         return $pricebook;
@@ -48,7 +48,7 @@ class ProductRepository
     public function basePricebook()
     {
         if (!$pricebook = Pricebook::find(config('opera-salesforce.pricebook'))) {
-            throw new \Throwable("Pricebook is missing in Salesforce: Standard Price Book");
+            throw new \Exception("Pricebook is missing in Salesforce: Standard Price Book");
         }
 
         return $pricebook;

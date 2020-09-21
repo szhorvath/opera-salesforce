@@ -47,7 +47,7 @@ class ProductRepository
 
     public function basePricebook()
     {
-        if (!$pricebook = Pricebook::find(config('opera-salesforce.pricebook'))) {
+        if (!$pricebook = Pricebook::find(config('opera_salesforce.pricebook'))) {
             throw new \Exception("Pricebook is missing in Salesforce: Standard Price Book");
         }
 

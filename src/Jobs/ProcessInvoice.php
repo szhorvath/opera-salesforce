@@ -38,7 +38,7 @@ class ProcessInvoice implements ShouldQueue
      */
     public function handle()
     {
-        $invoice = OperaSalesforce::setOperaInvoiceService(null, null, $this->activity->opera_id_field)->updateInvoice();
+        $invoice = OperaSalesforce::initOperaInvoiceService(null, null, $this->activity->opera_id_field)->updateInvoice();
 
         if ($invoice) {
             $this->activity->cache = json_encode($invoice->toArray());

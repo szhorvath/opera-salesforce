@@ -2,12 +2,13 @@
 
 namespace Szhorvath\OperaSalesforce;
 
-use Szhorvath\OperaSalesforce\Models\Invoice;
+use Illuminate\Support\Str;
 use Szhorvath\OperaSalesforce\Models\Order;
+use Szhorvath\OperaSalesforce\Models\Invoice;
 use Szhorvath\OperaSalesforce\Services\Opera\OrderItem;
 use Szhorvath\OperaSalesforce\Services\Opera\OrderService as OperaOrderService;
-use Szhorvath\OperaSalesforce\Services\Opera\OrderItemService as OperaOrderItemService;
 use Szhorvath\OperaSalesforce\Services\Opera\InvoiceService as OperaInvoiceService;
+use Szhorvath\OperaSalesforce\Services\Opera\OrderItemService as OperaOrderItemService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\OrderService as SalesforceOrderService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\AccountService as SalesforceAccountService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\InvoiceService as SalesforceInvoiceService;
@@ -127,9 +128,52 @@ class OperaSalesforce
             $this->processCreditNote();
             return $this;
         }
+        try {
+            //Insert Order
+            $salesforceOrder = $this->insertOrder();
+        } catch (\Exception $exception) {
+            if (Str::contains($exception->getMessage(), 'cannot change pricebook on order with order items')) {
+                $this->salesforceOrderService->findOrder($this->operaOrderService->getDocumentNumber());
+                //Delete Invoices and Forecasts
+                $this->salesforceOrderService->deleteForecastInvoices();
+                $this->salesforceOrderService->deleteInvoices();
+                //Delete Order
+                $this->salesforceOrderService->deleteOrder();
 
-        //Insert Order
-        $salesforceOrder = $this->salesforceOrderService->insertOrder((object) [
+                //Recreate order
+                $salesforceOrder = $this->insertOrder();
+            } else {
+                throw new \Exception(json_encode([
+                    'docNumber' => $this->operaOrderService->getDocumentNumber(),
+                    'division' => $this->operaOrderService->getManagingOffice(),
+                    'message' => $exception->getMessage()
+                ]));
+            }
+        }
+
+
+        //Create order items
+        $this->operaOrderItemService->getAItems()
+            ->each(fn ($item) => $this->createSalesforceOrderItem($item, $salesforceOrder));
+
+        //Update order status
+        $this->salesforceOrderService->updateStatus($this->operaOrderService->getStatus());
+
+        //Delete Invoices and Forecasts
+        $this->salesforceOrderService->deleteForecastInvoices();
+        $this->salesforceOrderService->deleteInvoices();
+
+        //Create invoices
+        $this->operaOrderItemService->getDeliveries()
+            ->map(fn ($operaItems) => $this->createInvoice($operaItems, $salesforceOrder))
+            ->each(fn ($invoice) => $this->createForecast($invoice));
+
+        return $this;
+    }
+
+    public function insertOrder()
+    {
+        return $this->salesforceOrderService->insertOrder((object) [
             'accountId' => $this->salesforceAccountService->getAccountId(),
             'salesOrderNumber' => $this->operaOrderService->getSalesOrderNumber(),
             'customerReference' => $this->operaOrderService->getCustomerReference(),
@@ -151,24 +195,6 @@ class OperaSalesforce
             'statusCode' => $this->operaOrderService->getStatusCode(),
             'type' => 'Order',
         ]);
-
-        //Create order items
-        $this->operaOrderItemService->getAItems()
-            ->each(fn ($item) => $this->createSalesforceOrderItem($item, $salesforceOrder));
-
-        //Update order status
-        $this->salesforceOrderService->updateStatus($this->operaOrderService->getStatus());
-
-        //Delete Invoices and Forecasts
-        $this->salesforceOrderService->deleteForecastInvoices();
-        $this->salesforceOrderService->deleteInvoices();
-
-        //Create invoices
-        $this->operaOrderItemService->getDeliveries()
-            ->map(fn ($operaItems) => $this->createInvoice($operaItems, $salesforceOrder))
-            ->each(fn ($invoice) => $this->createForecast($invoice));
-
-        return $this;
     }
 
     public function createSalesforceOrderItem(OrderItem $operaItem, Order $salesforceOrder)

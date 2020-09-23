@@ -54,6 +54,11 @@ class OrderService
         return $this->getInvoices()->each(fn ($invoice) => $invoice->delete());
     }
 
+    public function deleteOrderItems()
+    {
+        return $this->getOrderItems()->each(fn ($orderItem) => $orderItem->delete());
+    }
+
     public function insertOrder(object $data)
     {
         if ($this->isEmpty()) {
@@ -188,7 +193,10 @@ class OrderService
 
     public function deleteOrder()
     {
-        $this->order->delete();
+        $this->updateStatus('Order');
+        $deleted = $this->order->delete();
+        $this->order = null;
+        return $deleted;
     }
 
     public function getOrder()

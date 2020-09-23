@@ -17,14 +17,16 @@ class SyncInvoiceWithSalesforce implements ShouldQueue
 
     protected $invoiceId;
 
+    protected $division;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($invoiceId)
+    public function __construct($invoiceId, $division)
     {
         $this->invoiceId = $invoiceId;
+        $this->division = $division;
     }
 
     /**
@@ -34,7 +36,10 @@ class SyncInvoiceWithSalesforce implements ShouldQueue
      */
     public function handle()
     {
-        OperaSalesforce::initOperaInvoiceService(null, null, $this->invoiceId)->updateInvoice();
+        $regions = config('opera_salesforce.regions');
+        $config = $regions[$this->division];
+
+        OperaSalesforce::setConfig($config)->initOperaInvoiceService(null, null, $this->invoiceId)->updateInvoice();
     }
 
     /**
@@ -47,9 +52,9 @@ class SyncInvoiceWithSalesforce implements ShouldQueue
     {
         Log::alert($exception->getMessage(), [
             'invoiceId' => $this->invoiceId,
+            'division' => $this->division,
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
         ]);
-        throw new Exception($this->invoiceId . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

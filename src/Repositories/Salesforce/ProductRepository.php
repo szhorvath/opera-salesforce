@@ -39,7 +39,7 @@ class ProductRepository
     public function officePricebook()
     {
         if (!$pricebook = Pricebook::find($this->config['pricebook'])) {
-            throw new \Exception("Pricebook is missing in Salesforce: ZND UK");
+            throw new \Exception("Pricebook is missing in Salesforce: " . $this->config['pricebook']);
         }
 
         return $pricebook;

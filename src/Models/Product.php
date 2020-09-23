@@ -39,6 +39,8 @@ class Product extends Model
         "Unit__c", //Text(255),
         "Types__c", //Picklist (Multi-Select)
         "Group__c", //Picklist
+        "Weight__c", //Number(16, 2)
+        "Weight_Lb__c", //Number(16, 2)
     ];
 
     public function pricebookEntries()

@@ -51,12 +51,18 @@ class ProcessOperaActivityLog implements ShouldQueue
     public function handle()
     {
         $this->handleOrders();
-        $this->handleInvoices();
+        // $this->handleInvoices();
     }
 
     protected function handleOrders()
     {
+        collect(['uk', 'nl', 'us'])->each(fn ($division) => $this->startProcessOrder($division));
+    }
+
+    protected function startProcessOrder($division)
+    {
         $unprocessedDocs = OperaActivity::where('opera_key_field_value', 'like', 'DOC%')
+            ->where('division', $division)
             ->where('processed_at', null)
             ->orderBy('processing')
             ->get()->groupBy('opera_key_field_value');
@@ -76,6 +82,8 @@ class ProcessOperaActivityLog implements ShouldQueue
                 ->each(fn ($activity) => $activity->delete());
         });
     }
+
+    // Deprecated
     protected function handleInvoices()
     {
         $unprocessedInvoices = OperaActivity::where('opera_table_name', 'STRAN')

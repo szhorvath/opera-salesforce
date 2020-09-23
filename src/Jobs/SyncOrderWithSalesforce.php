@@ -17,14 +17,17 @@ class SyncOrderWithSalesforce implements ShouldQueue
 
     protected $docNumber;
 
+    protected $division;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($docNumber)
+    public function __construct($docNumber, $division)
     {
         $this->docNumber = $docNumber;
+        $this->division = $division;
     }
 
     /**
@@ -34,7 +37,10 @@ class SyncOrderWithSalesforce implements ShouldQueue
      */
     public function handle()
     {
-        $operaSalesforce = OperaSalesforce::init($this->docNumber);
+        $regions = config('opera_salesforce.regions');
+        $config = $regions[$this->division];
+
+        $operaSalesforce = OperaSalesforce::setConfig($config)->init($this->docNumber);
 
         if ($operaSalesforce->operaOrderExists()) {
             $operaSalesforce->syncSalesforceWithOpera();
@@ -54,10 +60,10 @@ class SyncOrderWithSalesforce implements ShouldQueue
     public function failed(Exception $exception)
     {
         Log::alert($exception->getMessage(), [
-            'docNumber' => $this->activity->opera_key_field_value,
+            'docNumber' => $this->docNumber,
+            'division' => $this->division,
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
         ]);
-        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

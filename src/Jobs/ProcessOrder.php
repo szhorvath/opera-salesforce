@@ -38,7 +38,10 @@ class ProcessOrder implements ShouldQueue
      */
     public function handle()
     {
-        $operaSalesforce = OperaSalesforce::init($this->activity->opera_key_field_value);
+        $regions = config('opera_salesforce.regions');
+        $config = $regions[$this->activity->division];
+
+        $operaSalesforce = OperaSalesforce::setConfig($config)->init($this->activity->opera_key_field_value);
         // $operaSalesforce = OperaSalesforce::init('DOC125073'); //Credit note
         // $operaSalesforce = OperaSalesforce::init('DOC124666'); //Credit note Rebate
         // $operaSalesforce = OperaSalesforce::init('DOC118522'); //multi invoice
@@ -68,9 +71,9 @@ class ProcessOrder implements ShouldQueue
     {
         Log::alert($exception->getMessage(), [
             'docNumber' => $this->activity->opera_key_field_value,
+            'division' => $this->activity->division,
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
         ]);
-        throw new Exception($this->docNumber . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

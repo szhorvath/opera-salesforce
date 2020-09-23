@@ -129,4 +129,14 @@ class OrderItem
     {
         return 'Undefined';
     }
+
+    public function getProductWeight()
+    {
+        return (float) $this->item->cn_unitw ?? null;
+    }
+
+    public function getProductWeightUnit()
+    {
+        return $this->office === 'us' ? 'lb' : 'kg';
+    }
 }

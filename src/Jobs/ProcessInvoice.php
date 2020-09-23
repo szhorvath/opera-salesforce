@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Szhorvath\OperaSalesforce\Facades\OperaSalesforce;
+use Throwable;
 
 class ProcessInvoice implements ShouldQueue
 {
@@ -38,7 +39,10 @@ class ProcessInvoice implements ShouldQueue
      */
     public function handle()
     {
-        $invoice = OperaSalesforce::initOperaInvoiceService(null, null, $this->activity->opera_id_field)->updateInvoice();
+        $regions = config('opera_salesforce.regions');
+        $config = $regions[$this->activity->division];
+
+        $invoice = OperaSalesforce::setConfig($config)->initOperaInvoiceService(null, null, $this->activity->opera_id_field)->updateInvoice();
 
         if ($invoice) {
             $this->activity->cache = json_encode($invoice->toArray());
@@ -52,16 +56,16 @@ class ProcessInvoice implements ShouldQueue
     /**
      * The job failed to process.
      *
-     * @param  Exception   $exception
+     * @param  Throwable   $th
      * @return void
      */
-    public function failed(Exception $exception)
+    public function failed(Throwable $th)
     {
-        Log::alert($exception->getMessage(), [
+        Log::alert($th->getMessage(), [
             'invoiceId' => $this->activity->opera_id_field,
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
+            'division' => $this->activity->division,
+            'file' => $th->getFile(),
+            'line' => $th->getLine(),
         ]);
-        throw new Exception($this->activity->opera_id_field . ' - ' . $exception->getMessage() . ' - ' . $exception->getFile() . ':' . $exception->getLine());
     }
 }

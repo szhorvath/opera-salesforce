@@ -59,6 +59,8 @@ class ProductService
         $this->product->Managing_Office__c = $data->managingOffice;
         $this->product->Unit__c            = $data->unit;
         $this->product->Types__c           = $data->type;
+        $this->product->Weight__c          = $data->weightUnit === 'kg' ? $data->weight : null;
+        $this->product->Weight_Lb__c       = $data->weightUnit === 'lb' ? $data->weight : null;
 
         return $this->product->save();
     }

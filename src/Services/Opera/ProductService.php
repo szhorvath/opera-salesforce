@@ -54,6 +54,16 @@ class ProductService
         return 'Each';
     }
 
+    public function getWeight()
+    {
+        return (float) $this->product->cn_unitw ?? null;
+    }
+
+    public function getWeightUnit()
+    {
+        return $this->office === 'us' ? 'lb' : 'kg';
+    }
+
     public function getType()
     {
         return 'Undefined';

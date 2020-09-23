@@ -283,6 +283,8 @@ class OperaSalesforce
             'name'           => $operaItem->getProductName(),
             'managingOffice' => $operaItem->getManagingOffice(),
             'unit'           => $operaItem->getProductUnit(),
+            'weight'         => $operaItem->getProductWeight(),
+            'weightUnit'     => $operaItem->getProductWeightUnit(),
             'type'           => $operaItem->getProductType(),
         ]);
     }

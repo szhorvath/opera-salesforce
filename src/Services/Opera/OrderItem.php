@@ -137,6 +137,6 @@ class OrderItem
 
     public function getProductWeightUnit()
     {
-        return $this->office === 'us' ? 'lb' : 'kg';
+        return $this->office === 'US' ? 'lb' : 'kg';
     }
 }

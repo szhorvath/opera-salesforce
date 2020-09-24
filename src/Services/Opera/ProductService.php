@@ -81,7 +81,7 @@ class ProductService
 
     public function getWeightUnit()
     {
-        return $this->office === 'us' ? 'lb' : 'kg';
+        return $this->office === 'US' ? 'lb' : 'kg';
     }
 
     public function getType()

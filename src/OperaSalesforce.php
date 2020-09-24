@@ -201,9 +201,7 @@ class OperaSalesforce
     {
         $salseforceProductService = new SalesforceProductService($this->config, $operaItem->getProductCode());
 
-        if (!$salesforceProduct = $salseforceProductService->getProduct()) {
-            $salesforceProduct = $this->createProduct($operaItem, $salseforceProductService);
-        }
+        $salesforceProduct = $this->insertProduct($operaItem, $salseforceProductService);
 
         $pricebookEntryId = $salseforceProductService->getPricebookEntryId($operaItem->getUnitPrice(), $operaItem->getCurrency());
 
@@ -299,9 +297,9 @@ class OperaSalesforce
         ]);
     }
 
-    public function createProduct(OrderItem $operaItem, SalesforceProductService $salseforceProductService)
+    public function insertProduct(OrderItem $operaItem, SalesforceProductService $salseforceProductService)
     {
-        return $salseforceProductService->createProduct((object) [
+        return $salseforceProductService->insertProduct((object) [
             'productCode'    => $operaItem->getProductCode(),
             'currency'       => $operaItem->getCurrency(),
             'description'    => $operaItem->getProductDescription(),
@@ -402,9 +400,7 @@ class OperaSalesforce
         $salseforceProductService = new SalesforceProductService($this->config, $operaItem->getProductCode());
 
         //Get Product
-        if (!$salesforceProduct = $salseforceProductService->getProduct()) {
-            $salesforceProduct = $this->createProduct($operaItem, $salseforceProductService);
-        }
+        $salesforceProduct = $this->insertProduct($operaItem, $salseforceProductService);
 
         $unitPrice = -abs($operaItem->getUnitPrice());
 

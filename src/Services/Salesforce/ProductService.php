@@ -46,9 +46,11 @@ class ProductService
         return empty($this->product);
     }
 
-    public function createProduct(object $data)
+    public function insertProduct(object $data)
     {
-        $this->product = $this->productRepository->newProduct();
+        if ($this->isEmpty()) {
+            $this->product = $this->productRepository->newProduct();
+        }
 
         $this->product->IsActive           = true;
         $this->product->ProductCode        = $data->productCode;
@@ -59,8 +61,12 @@ class ProductService
         $this->product->Managing_Office__c = $data->managingOffice;
         $this->product->Unit__c            = $data->unit;
         $this->product->Types__c           = $data->type;
-        $this->product->Weight__c          = $data->weightUnit === 'kg' ? $data->weight : null;
-        $this->product->Weight_Lb__c       = $data->weightUnit === 'lb' ? $data->weight : null;
+        if ($data->weightUnit === 'kg') {
+            $this->product->Weight__c      = $data->weight;
+        }
+        if ($data->weightUnit === 'lb') {
+            $this->product->Weight_Lb__c   = $data->weight;
+        }
 
         return $this->product->save();
     }

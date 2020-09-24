@@ -32,6 +32,21 @@ class ProductService
         return $this;
     }
 
+    public function getProduct()
+    {
+        return $this->product;
+    }
+
+    public function isEmpty()
+    {
+        return empty($this->product);
+    }
+
+    public function getProductCode()
+    {
+        return $this->product->cn_desc;
+    }
+
     public function getName()
     {
         return $this->product->cn_desc;
@@ -47,6 +62,11 @@ class ProductService
     public function getFamily()
     {
         return $this->getProductFamily($this->product->cn_catag);
+    }
+
+    public function getManagingOffice()
+    {
+        return $this->office;
     }
 
     public function getUnit()

@@ -7,6 +7,7 @@ use Szhorvath\OperaSalesforce\Models\Order;
 use Szhorvath\OperaSalesforce\Models\Invoice;
 use Szhorvath\OperaSalesforce\Services\Opera\OrderItem;
 use Szhorvath\OperaSalesforce\Services\Opera\OrderService as OperaOrderService;
+use Szhorvath\OperaSalesforce\Services\Opera\ProductService as OperaProductService;
 use Szhorvath\OperaSalesforce\Services\Opera\InvoiceService as OperaInvoiceService;
 use Szhorvath\OperaSalesforce\Services\Opera\OrderItemService as OperaOrderItemService;
 use Szhorvath\OperaSalesforce\Services\Salesforce\OrderService as SalesforceOrderService;
@@ -310,6 +311,25 @@ class OperaSalesforce
             'weight'         => $operaItem->getProductWeight(),
             'weightUnit'     => $operaItem->getProductWeightUnit(),
             'type'           => $operaItem->getProductType(),
+        ]);
+    }
+
+    public function syncProductWithSalesforce(string $productCode)
+    {
+        $operaProductService = new OperaProductService($this->config, $productCode);
+        $salseforceProductService = new SalesforceProductService($this->config, $productCode);
+
+        return $salseforceProductService->insertProduct((object) [
+            'productCode'    => $operaProductService->getProductCode(),
+            'currency'       => $operaProductService->getCurrency(),
+            'description'    => $operaProductService->getDescription(),
+            'family'         => $operaProductService->getFamily(),
+            'name'           => $operaProductService->getName(),
+            'managingOffice' => $operaProductService->getManagingOffice(),
+            'unit'           => $operaProductService->getUnit(),
+            'weight'         => $operaProductService->getWeight(),
+            'weightUnit'     => $operaProductService->getWeightUnit(),
+            'type'           => $operaProductService->getType(),
         ]);
     }
 

@@ -16,7 +16,7 @@
   "require": {
     "php": "^7.4",
     "illuminate/support": "~6|~7",
-    "szhorvath/visual-foxpro-orm": "^0.7",
+    "szhorvath/visual-foxpro-orm": "^1",
     "rob-lester-jr04/eloquent-sales-force": "^2.7"
   },
   "require-dev": {

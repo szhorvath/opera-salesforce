@@ -16,8 +16,8 @@
   "require": {
     "php": "^7.4",
     "illuminate/support": "~6|~7",
-    "szhorvath/visual-foxpro-orm": "^0.6",
-    "rob-lester-jr04/eloquent-sales-force": "^2.6"
+    "szhorvath/visual-foxpro-orm": "^0.7",
+    "rob-lester-jr04/eloquent-sales-force": "^2.7"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.0",

@@ -12,6 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Szhorvath\OperaSalesforce\Jobs\ProcessOrder;
 use Szhorvath\OperaSalesforce\Jobs\ProcessInvoice;
+use Szhorvath\OperaSalesforce\Jobs\ProcessProduct;
 
 class ProcessOperaActivityLog implements ShouldQueue
 {
@@ -51,6 +52,7 @@ class ProcessOperaActivityLog implements ShouldQueue
     public function handle()
     {
         $this->handleOrders();
+        $this->handleProducts();
         // $this->handleInvoices();
     }
 
@@ -74,6 +76,32 @@ class ProcessOperaActivityLog implements ShouldQueue
             if ($processing->isEmpty()) {
                 $activity = $activities->sortByDesc('opera_created_at')->shift();
                 ProcessOrder::dispatch($activity)->delay($this->date);
+                $this->date->addSeconds(5);
+            }
+
+            //Delete rest of the log items;
+            $activities->filter(fn ($activity) => !$activity->processing)
+                ->each(fn ($activity) => $activity->delete());
+        });
+    }
+
+    protected function handleProducts()
+    {
+        $unprocessedProducts = OperaActivity::where('opera_table_name', 'CNAME')
+            ->where('action', '!=', 'Stock Processing')
+            ->where('processed_at', null)
+            ->orderBy('processing')
+            ->get()->groupBy('opera_key_field_value');
+
+        $date = Carbon::now();
+
+        $unprocessedProducts->each(function ($activities) {
+            $processing = $activities->filter(fn ($activity) => $activity->processing);
+
+            //if is not processing than create the process
+            if ($processing->isEmpty()) {
+                $activity = $activities->sortByDesc('opera_created_at')->shift();
+                ProcessProduct::dispatch($activity)->delay($this->date);
                 $this->date->addSeconds(5);
             }
 

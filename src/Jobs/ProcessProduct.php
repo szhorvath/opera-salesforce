@@ -61,7 +61,7 @@ class ProcessProduct implements ShouldQueue
     public function failed(Throwable $th)
     {
         Log::alert($th->getMessage(), [
-            'invoiceId' => $this->activity->opera_key_field_value,
+            'productCode' => $this->activity->opera_key_field_value,
             'division' => $this->activity->division,
             'file' => $th->getFile(),
             'line' => $th->getLine(),

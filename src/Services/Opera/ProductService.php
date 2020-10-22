@@ -56,7 +56,7 @@ class ProductService
     {
         $extra = isset($this->product->cn_exten) ? ' - ' . $this->product->cn_exten : '';
 
-        return $this->product->cn_desc . $extra;
+        return $this->product->cn_desc?? '' . $extra;
     }
 
     public function getFamily()

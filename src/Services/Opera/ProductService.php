@@ -44,7 +44,7 @@ class ProductService
 
     public function getProductCode()
     {
-        return $this->product->cn_ref;
+        return $this->product->cn_ref?? '';
     }
 
     public function getName()

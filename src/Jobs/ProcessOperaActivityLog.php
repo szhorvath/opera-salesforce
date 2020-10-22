@@ -20,6 +20,8 @@ class ProcessOperaActivityLog implements ShouldQueue
 
     protected $date;
 
+    protected $allowedRegions = ['uk', 'nl', 'us'];
+
     /**
      * Create a new job instance.
      *
@@ -53,12 +55,16 @@ class ProcessOperaActivityLog implements ShouldQueue
     {
         $this->handleOrders();
         $this->handleProducts();
-        // $this->handleInvoices();
     }
 
     protected function handleOrders()
     {
-        collect(['uk', 'nl', 'us'])->each(fn ($division) => $this->startProcessOrder($division));
+        collect($this->allowedRegions)->each(fn ($division) => $this->startProcessOrder($division));
+    }
+
+    protected function handleProducts()
+    {
+        collect($this->allowedRegions)->each(fn ($division) => $this->startProcessProduct($division));
     }
 
     protected function startProcessOrder($division)
@@ -85,10 +91,11 @@ class ProcessOperaActivityLog implements ShouldQueue
         });
     }
 
-    protected function handleProducts()
+    protected function startProcessProduct($division)
     {
         $unprocessedProducts = OperaActivity::where('opera_table_name', 'CNAME')
-            ->where('action', '!=', 'Stock Processing')
+            ->where('division', $division)
+            ->where('action', 'Stock Processing')
             ->where('processed_at', null)
             ->orderBy('processing')
             ->get()->groupBy('opera_key_field_value');

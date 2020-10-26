@@ -147,7 +147,9 @@ class OperaSalesforce
                 throw new \Exception(json_encode([
                     'docNumber' => $this->operaOrderService->getDocumentNumber(),
                     'division' => $this->operaOrderService->getManagingOffice(),
-                    'message' => $exception->getMessage()
+                    'message' => $exception->getMessage(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
                 ]));
             }
         }

@@ -19,7 +19,7 @@ return [
             'source' => env('OSF_SOURCE_NL', ''),
         ],
         'us' => [
-            'locale' => 'nl_US',
+            'locale' => 'en_US',
             'currency' => 'USD',
             'office' => 'US',
             'pricebook' => env('OSF_PRICEBOOK_ID_US', ''),

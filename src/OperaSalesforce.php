@@ -320,6 +320,7 @@ class OperaSalesforce
     {
         $operaProductService = new OperaProductService($this->config, $productCode);
         $salseforceProductService = new SalesforceProductService($this->config, $productCode);
+        $salseforceProductService->getPricebookEntryId(0, $operaProductService->getCurrency());
 
         return $salseforceProductService->insertProduct((object) [
             'productCode'    => $operaProductService->getProductCode(),

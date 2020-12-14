@@ -118,7 +118,7 @@ class OrderService
         }
 
         $orderItem->Opera_Id__c        = (int) $data->id;
-        $orderItem->Description        = Str::limit($data->memo, 253);
+        $orderItem->Description        = Str::limit($data->memo, 250);
         $orderItem->Quantity           = $data->quantity;
         $orderItem->UnitPrice          = (float) $data->unitPrice;
         $orderItem->Managing_Office__c = $data->managingOffice;
